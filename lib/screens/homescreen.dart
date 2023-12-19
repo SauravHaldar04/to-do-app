@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {},
                         icon: const Icon(
                           Icons.home_outlined,
-                          color: const Color.fromARGB(255, 255, 255, 255),
+                          color: Color.fromARGB(255, 255, 255, 255),
                           size: 40,
                         ),
                       ),
@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: categoryController,
                         label: const Text("Task Category"),
                         dropdownMenuEntries: [
-                          DropdownMenuEntry(
+                          const DropdownMenuEntry(
                               value: UuidValue, label: "Work/Professional"),
                           DropdownMenuEntry(
                               value: UuidValue, label: "Personal"),

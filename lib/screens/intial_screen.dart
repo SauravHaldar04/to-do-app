@@ -3,7 +3,7 @@ import 'package:firebase_tutorial/screens/email_auth/login_screen.dart';
 //import 'package:firebase_tutorial/screens/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_tutorial/screens/phone_auth/signupPhone.dart';
-import 'package:rename/rename.dart';
+//import 'package:rename/rename.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
@@ -29,15 +29,15 @@ class _InitialScreenState extends State<InitialScreen> {
           padding: EdgeInsets.all(20),
           child: Center(
             child: Column(children: [
-              Text(
+              const Text(
                 'Choose a sign in method',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               SizedBox(
                 width: 200,
                 child: TextButton(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                     shape: MaterialStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.elliptical(5, 5)),
@@ -49,7 +49,7 @@ class _InitialScreenState extends State<InitialScreen> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const LoginScreen()));
                   },
-                  child: Text(
+                  child: const Text(
                     'Email',
                     style: TextStyle(
                       color: Colors.white,
@@ -59,11 +59,11 @@ class _InitialScreenState extends State<InitialScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               SizedBox(
                 width: 200,
                 child: TextButton(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                     shape: MaterialStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.elliptical(5, 5)),
@@ -77,7 +77,7 @@ class _InitialScreenState extends State<InitialScreen> {
                           builder: (context) => const PhoneSignin()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Phone No',
                     style: TextStyle(
                       color: Colors.white,

@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(children: [
             TextField(
               controller: emailController,
-              decoration: InputDecoration(labelText: 'Email Address'),
+              decoration: const InputDecoration(labelText: 'Email Address'),
             ),
             const SizedBox(
               height: 20,
@@ -119,8 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
             CupertinoButton(
                 child: const Text('Create an account'),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SignupScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SignupScreen()));
                 }),
           ]),
         ),
