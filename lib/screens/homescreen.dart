@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
+  String message = "Please fill the fields";
   void saveUserData() async {
     bool isDone = false;
     String title = titleController.text.trim();
@@ -58,19 +59,20 @@ class _HomeScreenState extends State<HomeScreen> {
         "Status": isDone
       };
       FirebaseFirestore.instance.collection(userID).doc().set(userData);
-      showModalBottomSheet(
-        context: context,
-        builder: (context) => const SizedBox(
-          height: double.maxFinite,
-          width: double.infinity,
-          child: Center(
-            child: Text(
-              "Task Added !",
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
-            ),
-          ),
-        ),
-      );
+      message = "Task Added";
+      // showModalBottomSheet(
+      //   context: context,
+      //   builder: (context) => const SizedBox(
+      //     height: double.maxFinite,
+      //     width: double.maxFinite,
+      //     child: Center(
+      //       child: Text(
+      //         "Task Added !",
+      //         style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+      //       ),
+      //     ),
+      //   ),
+      // );
       titleController.clear();
       descController.clear();
       categoryController.clear();
@@ -78,192 +80,182 @@ class _HomeScreenState extends State<HomeScreen> {
         profilepic = null;
       });
     } else {
-      showModalBottomSheet(
-        context: context,
-        builder: (context) => const SizedBox(
-          height: double.maxFinite,
-          width: double.infinity,
-          child: Center(
-            child: Text(
-              "Please fill all the fields",
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
-            ),
-          ),
-        ),
-      );
+      message = "Please fill all the fields";
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<TaskProvider>(
-      builder: (context, value, child) => SingleChildScrollView(
-        child: Scaffold(
-          bottomNavigationBar: SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 31, 31, 31),
-                    boxShadow: [
-                      BoxShadow(
-                          color: const Color.fromARGB(255, 46, 46, 46),
-                          offset: Offset(0, -2),
-                          blurRadius: 10)
-                    ]),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.home_outlined,
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          size: 40,
-                        ),
-                      ),
-                      Consumer<StatusProvider>(
-                        builder: (context, value, child) => IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CompletedTasks(
-                                    userID: widget.userID, isDone: isDone)));
-                          },
-                          icon: const Icon(
-                            Icons.checklist_rounded,
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            size: 40,
-                          ),
-                        ),
-                      )
-                    ]),
+      builder: (context, value, child) => Scaffold(
+        bottomNavigationBar: Container(
+          height: 60,
+          decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 31, 31, 31),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromARGB(255, 46, 46, 46),
+                    offset: Offset(0, -2),
+                    blurRadius: 10)
+              ]),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.home_outlined,
+                color: Color.fromARGB(255, 255, 255, 255),
+                size: 40,
               ),
             ),
+            Consumer<StatusProvider>(
+              builder: (context, value, child) => IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CompletedTasks(userID: widget.userID, isDone: isDone),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.checklist_rounded,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  size: 40,
+                ),
+              ),
+            )
+          ]),
+        ),
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                onPressed: () {
+                  logOut();
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const LoginScreen()));
+                },
+                icon: const Icon(Icons.exit_to_app)),
+            IconButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                icon: const Icon(Icons.replay_outlined))
+          ],
+          title: const Text(
+            'Home',
+            // style: TextStyle(color: Colors.white),
           ),
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    logOut();
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-                  },
-                  icon: const Icon(Icons.exit_to_app)),
-              IconButton(
-                  onPressed: () {
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.replay_outlined))
-            ],
-            title: const Text(
-              'Home',
-              // style: TextStyle(color: Colors.white),
-            ),
-            centerTitle: true,
-            // backgroundColor: Color.fromARGB(255, 178, 36, 255),
-          ),
-          body: SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.all(17.0),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    XFile? image = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
+          centerTitle: true,
+          // backgroundColor: Color.fromARGB(255, 178, 36, 255),
+        ),
+        body: SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.all(17.0),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  XFile? image = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
 
-                    if (image != null) {
-                      File imgfile = File(image.path);
-                      setState(() {
-                        profilepic = imgfile;
-                      });
-                    }
-                  },
-                  child: CircleAvatar(
-                    backgroundImage:
-                        (profilepic != null) ? FileImage(profilepic!) : null,
-                    backgroundColor: Colors.grey,
-                    radius: 40,
-                  ),
+                  if (image != null) {
+                    File imgfile = File(image.path);
+                    setState(() {
+                      profilepic = imgfile;
+                    });
+                  }
+                },
+                child: CircleAvatar(
+                  backgroundImage:
+                      (profilepic != null) ? FileImage(profilepic!) : null,
+                  backgroundColor: Colors.grey,
+                  radius: 40,
                 ),
-                const SizedBox(
-                  height: 15,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                    labelText: 'Task Title',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)))),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextField(
+                controller: descController,
+                decoration: const InputDecoration(
+                    labelText: 'Description',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)))),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              SizedBox(
+                width: double.maxFinite,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  child: DropdownMenu(
+                      controller: categoryController,
+                      label: const Text("Task Category"),
+                      dropdownMenuEntries: const [
+                        DropdownMenuEntry(
+                            value: UuidValue, label: "Work/Professional"),
+                        DropdownMenuEntry(value: UuidValue, label: "Personal"),
+                        DropdownMenuEntry(value: UuidValue, label: "Financial"),
+                        DropdownMenuEntry(
+                            value: UuidValue, label: "Food related"),
+                        DropdownMenuEntry(
+                            value: UuidValue, label: "Health and Fitness"),
+                        DropdownMenuEntry(value: UuidValue, label: "Hobbies"),
+                        DropdownMenuEntry(value: UuidValue, label: "Travel"),
+                        DropdownMenuEntry(
+                            value: UuidValue, label: "Appointments"),
+                        DropdownMenuEntry(
+                            value: UuidValue, label: "Miscellanous"),
+                      ]),
                 ),
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                      labelText: 'Task Title',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)))),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                TextField(
-                  controller: descController,
-                  decoration: const InputDecoration(
-                      labelText: 'Description',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)))),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    child: DropdownMenu(
-                        controller: categoryController,
-                        label: const Text("Task Category"),
-                        dropdownMenuEntries: [
-                          const DropdownMenuEntry(
-                              value: UuidValue, label: "Work/Professional"),
-                          DropdownMenuEntry(
-                              value: UuidValue, label: "Personal"),
-                          DropdownMenuEntry(
-                              value: UuidValue, label: "Financial"),
-                          DropdownMenuEntry(
-                              value: UuidValue, label: "Food related"),
-                          DropdownMenuEntry(
-                              value: UuidValue, label: "Health and Fitness"),
-                          DropdownMenuEntry(value: UuidValue, label: "Hobbies"),
-                          DropdownMenuEntry(value: UuidValue, label: "Travel"),
-                          DropdownMenuEntry(
-                              value: UuidValue, label: "Appointments"),
-                          DropdownMenuEntry(
-                              value: UuidValue, label: "Miscellanous"),
-                        ]),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        saveUserData();
-                      },
-                      child: const Text("Save")),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Consumer<StatusProvider>(
-                  builder: (context, value, child) => StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection(widget.userID!)
-                          .where("Status", isEqualTo: false)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            return Expanded(
-                                child: ListView.builder(
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                    onPressed: () {
+                      saveUserData();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            message,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 20),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text("Save")),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Consumer<StatusProvider>(
+                builder: (context, value, child) => StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection(widget.userID!)
+                        .where("Status", isEqualTo: false)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return Expanded(
+                            child: ListView.builder(
                               itemCount: snapshot.data!.docs.length,
                               itemBuilder: (context, index) {
                                 Map<String, dynamic> newUserMap =
@@ -428,19 +420,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )),
                                 );
                               },
-                            ));
-                          } else {
-                            return const Text("Database is Empty!!");
-                          }
+                            ),
+                          );
                         } else {
-                          return const CircularProgressIndicator.adaptive();
+                          return const Text("Database is Empty!!");
                         }
-                      }),
-                )
-              ],
-            ),
-          )),
-        ),
+                      } else {
+                        return const CircularProgressIndicator.adaptive();
+                      }
+                    }),
+              )
+            ],
+          ),
+        )),
       ),
     );
   }
