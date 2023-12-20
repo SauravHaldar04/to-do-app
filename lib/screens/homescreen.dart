@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool isDone = false;
-  File? profilepic;
+  //File? profilepic;
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
@@ -40,21 +40,17 @@ class _HomeScreenState extends State<HomeScreen> {
     String description = descController.text.trim();
     String userID = widget.userID!;
     String category = categoryController.text.trim();
-    UploadTask task = FirebaseStorage.instance
-        .ref()
-        .child("profilepics")
-        .child(const Uuid().v1())
-        .putFile(profilepic!);
-    TaskSnapshot taskSnapshot = await task;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    Reference task = FirebaseStorage.instance.ref().child("$category.jpg");
+    //TaskSnapshot taskSnapshot = await task;
+    final downloadUrl = await task.getDownloadURL();
     if (title != "" ||
         description != "" ||
-        profilepic != null ||
+        //profilepic != null ||
         category != "") {
       Map<String, dynamic> userData = {
         "Title": title,
         "Description": description,
-        "Profile pic": downloadUrl,
+        "Task logo": downloadUrl,
         "Category": category,
         "Status": isDone
       };
@@ -76,9 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
       titleController.clear();
       descController.clear();
       categoryController.clear();
-      setState(() {
-        profilepic = null;
-      });
+      // setState(() {
+      //   profilepic = null;
+      // });
     } else {
       message = "Please fill all the fields";
     }
@@ -155,25 +151,25 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(17.0),
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  XFile? image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
+              // GestureDetector(
+              //   onTap: () async {
+              //     XFile? image = await ImagePicker()
+              //         .pickImage(source: ImageSource.gallery);
 
-                  if (image != null) {
-                    File imgfile = File(image.path);
-                    setState(() {
-                      profilepic = imgfile;
-                    });
-                  }
-                },
-                child: CircleAvatar(
-                  backgroundImage:
-                      (profilepic != null) ? FileImage(profilepic!) : null,
-                  backgroundColor: Colors.grey,
-                  radius: 40,
-                ),
-              ),
+              //     if (image != null) {
+              //       File imgfile = File(image.path);
+              //       setState(() {
+              //         profilepic = imgfile;
+              //       });
+              //     }
+              //   },
+              //   child: CircleAvatar(
+              //     backgroundImage:
+              //         (profilepic != null) ? FileImage(profilepic!) : null,
+              //     backgroundColor: Colors.grey,
+              //     radius: 40,
+              //   ),
+              // ),
               const SizedBox(
                 height: 15,
               ),
@@ -206,11 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       label: const Text("Task Category"),
                       dropdownMenuEntries: const [
                         DropdownMenuEntry(
-                            value: UuidValue, label: "Work/Professional"),
+                          value: UuidValue,
+                          label: "Work",
+                        ),
                         DropdownMenuEntry(value: UuidValue, label: "Personal"),
                         DropdownMenuEntry(value: UuidValue, label: "Financial"),
                         DropdownMenuEntry(
-                            value: UuidValue, label: "Food related"),
+                            value: UuidValue, label: "Food Related"),
                         DropdownMenuEntry(
                             value: UuidValue, label: "Health and Fitness"),
                         DropdownMenuEntry(value: UuidValue, label: "Hobbies"),
@@ -293,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           backgroundImage:
                                                               NetworkImage(
                                                                   newUserMap[
-                                                                      "Profile pic"]),
+                                                                      "Task logo"]),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -386,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   height: 10,
                                                 ),
                                                 Text(
-                                                  "Desciption : ${newUserMap["Description"]}",
+                                                  "Description : ${newUserMap["Description"]}",
                                                   style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 16),

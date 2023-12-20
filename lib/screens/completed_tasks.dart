@@ -110,7 +110,7 @@ class _CompletedTasksState extends State<CompletedTasks> {
                                                           backgroundImage:
                                                               NetworkImage(
                                                                   newUserMap[
-                                                                      "Profile pic"]),
+                                                                      "Task logo"]),
                                                         ),
                                                         Padding(
                                                           padding:
